@@ -1,0 +1,13 @@
+order_id,platform,country,customer_name,phone,address,sku,quantity,order_amount,declared_amount,currency,logistics_no,order_status,logistics_status,created_at
+CB20260718001,Amazon,US,Alice Brown,+14155552671,"88 King Street, San Francisco, CA 94107",SKU-A100,2,39.98,39.98,USD,LP993842001CN,Shipped,In transit,2026-07-18
+CB20260718002,Shopee,MY,Lim Wei,,"Kuala Lumpur",SKU-B210,1,15.90,15.90,USD,,Paid,Pending,2026-07-18
+CB20260718003,eBay,DE,Jonas Weber,+491701234567,"Berliner Strasse 18, Berlin",SKU-C301,3,88.50,9.99,EUR,DE99881234,Shipped,Delivered,2026-07-17
+CB20260718004,TikTok Shop,US,Emma Stone,abc123,"",SKU-D440,1,23.50,23.50,USD,LP993842004CN,Shipped,Pending,2026-07-17
+CB20260718005,Amazon,GB,Oliver Smith,+447700900123,"221B Baker Street, London",,2,44.00,44.00,GBP,LP993842005CN,Paid,In transit,2026-07-16
+CB20260718006,Lazada,TH,Nok Suthida,+66812345678,"99 Rama Road, Bangkok",SKU-E120,0,18.00,18.00,USD,LP993842006CN,Shipped,In transit,2026-07-16
+CB20260718007,AliExpress,FR,Lucas Martin,+33612345678,"12 Rue Lafayette, Paris",SKU-A100,1,29.99,29.99,EUR,LP993842007CN,Cancelled,In transit,2026-07-15
+CB20260718008,Shopee,SG,Chen Ming,+6581234567,"18 Orchard Road, Singapore",SKU-F900,4,120.00,120.00,USD,SG77881220,Shipped,Delivered,2026-07-15
+CB20260718009,eBay,CA,Sophia Lee,+14165550199,"75 Queen Street, Toronto",SKU-Z404,1,-5.00,5.00,USD,LP993842009CN,Paid,Pending,2026-07-14
+CB20260718010,Amazon,US,Noah Miller,+12125551234,"5th Avenue, New York, NY 10001",SKU-A100,2,39.98,39.98,USD,LP993842010CN,Shipped,Delivered,2026-07-14
+CB20260718011,TikTok Shop,US,Mia Johnson,+13105550111,"Los Angeles",SKU-B210,1,15.90,15.90,USD,,Paid,Pending,2026-07-13
+CB20260718012,Lazada,PH,Juan Dela Cruz,+639171234567,"Makati City, Metro Manila",SKU-P330,6,210.00,20.00,USD,PH5531882,Shipped,In transit,2026-07-13

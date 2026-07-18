@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>跨境电商订单异常识别与 AI 自动化处理系统</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">AI</span>
+        <div>
+          <strong>订单异常助手</strong>
+          <small>跨境履约效率工具</small>
+        </div>
+      </div>
+      <nav>
+        <a class="active" href="#dashboard">异常看板</a>
+        <a href="#orders">订单明细</a>
+        <a href="#advisor">AI 建议</a>
+        <a href="#process">处理流程</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ERP 订单同步后处理场景</p>
+          <h1>跨境电商订单异常识别与 AI 自动化处理系统</h1>
+        </div>
+        <div class="upload">
+          <label for="csvFile">上传 CSV 订单</label>
+          <input id="csvFile" type="file" accept=".csv">
+          <button id="loadSample" type="button">加载示例数据</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="metrics">
+        <article>
+          <span>订单总数</span>
+          <strong id="totalOrders">0</strong>
+        </article>
+        <article>
+          <span>异常订单</span>
+          <strong id="abnormalOrders">0</strong>
+        </article>
+        <article>
+          <span>异常率</span>
+          <strong id="abnormalRate">0%</strong>
+        </article>
+        <article>
+          <span>高优先级问题</span>
+          <strong id="urgentIssues">0</strong>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="panel issue-panel">
+          <div class="panel-title">
+            <h2>异常类型分布</h2>
+            <span id="normalCount">正常订单 0 单</span>
+          </div>
+          <div id="issueChart" class="issue-chart"></div>
+        </div>
+
+        <div id="advisor" class="panel advisor-panel">
+          <div class="panel-title">
+            <h2>AI 处理建议</h2>
+            <span id="advisorStatus">选择异常订单查看建议</span>
+          </div>
+          <div id="adviceBox" class="advice-box empty">
+            <p>点击订单表中的“生成建议”，系统会模拟大模型输出异常原因、处理动作和客服话术。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="orders" class="panel table-panel">
+        <div class="panel-title">
+          <h2>异常订单明细</h2>
+          <div class="filters">
+            <button class="filter active" data-filter="all" type="button">全部</button>
+            <button class="filter" data-filter="urgent" type="button">高优先级</button>
+            <button class="filter" data-filter="follow" type="button">待跟进</button>
+            <button class="filter" data-filter="normal" type="button">正常</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>订单号</th>
+                <th>平台</th>
+                <th>国家</th>
+                <th>金额</th>
+                <th>状态</th>
+                <th>异常标签</th>
+                <th>优先级</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="orderRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="process" class="process">
+        <div>
+          <span>1</span>
+          <strong>订单同步</strong>
+          <p>ERP 或平台订单导入 CSV，统一字段结构。</p>
+        </div>
+        <div>
+          <span>2</span>
+          <strong>规则识别</strong>
+          <p>按物流、地址、SKU、金额、状态等规则识别异常。</p>
+        </div>
+        <div>
+          <span>3</span>
+          <strong>AI 建议</strong>
+          <p>自动生成原因、处理动作和客服沟通话术。</p>
+        </div>
+        <div>
+          <span>4</span>
+          <strong>运营跟进</strong>
+          <p>按优先级分派给运营、物流、财务或客服处理。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
