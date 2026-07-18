@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>跨境电商订单异常识别与 AI 自动化处理系统</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --surface-2: #eef3f7;
+      --text: #18202a;
+      --muted: #667085;
+      --line: #dbe1e8;
+      --accent: #1677ff;
+      --accent-2: #10a37f;
+      --danger: #d92d20;
+      --warning: #b7791f;
+      --ok: #16803c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #18202a;
+      color: #fff;
+      padding: 24px 18px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .brand strong,
+    .brand small { display: block; }
+
+    .brand small {
+      margin-top: 4px;
+      color: #b9c2ce;
+      font-size: 12px;
+    }
+
+    nav { display: grid; gap: 8px; }
+
+    nav a {
+      color: #c9d2dd;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+    }
+
+    nav a.active,
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    main {
+      padding: 28px;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    h1, h2 { margin: 0; }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+
+    .upload {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+
+    .upload label, button { white-space: nowrap; }
+
+    input[type="file"] { max-width: 190px; }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      padding: 9px 13px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    button:hover { filter: brightness(0.96); }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .metrics article,
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .metrics article { padding: 18px; }
+
+    .metrics span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .metrics strong { font-size: 28px; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(360px, 1fr) minmax(340px, 0.9fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel { padding: 18px; }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .issue-chart { display: grid; gap: 12px; }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 132px 1fr 36px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar-track {
+      height: 12px;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--accent-2);
+    }
+
+    .advice-box {
+      display: grid;
+      gap: 12px;
+    }
+
+    .advice-box.empty { color: var(--muted); }
+
+    .advice-section {
+      padding: 12px;
+      background: var(--surface-2);
+      border-radius: 8px;
+    }
+
+    .advice-section strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .advice-section p,
+    .advice-section ul { margin: 0; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .filter.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 840px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      background: #fafbfc;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: #175cd3;
+      font-size: 12px;
+    }
+
+    .priority { font-weight: 700; }
+    .priority.urgent { color: var(--danger); }
+    .priority.follow { color: var(--warning); }
+    .priority.normal { color: var(--ok); }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .process div {
+      padding: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .process span {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .process p {
+      color: var(--muted);
+      margin: 8px 0 0;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell { grid-template-columns: 1fr; }
+      nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .topbar,
+      .workspace { display: grid; }
+      .metrics,
+      .process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      main { padding: 18px; }
+      .metrics,
+      .process,
+      nav { grid-template-columns: 1fr; }
+      .upload,
+      .panel-title { align-items: stretch; flex-direction: column; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">AI</span>
+        <div>
+          <strong>订单异常助手</strong>
+          <small>跨境履约效率工具</small>
+        </div>
+      </div>
+      <nav>
+        <a class="active" href="#dashboard">异常看板</a>
+        <a href="#orders">订单明细</a>
+        <a href="#advisor">AI 建议</a>
+        <a href="#process">处理流程</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ERP 订单同步后处理场景</p>
+          <h1>跨境电商订单异常识别与 AI 自动化处理系统</h1>
+        </div>
+        <div class="upload">
+          <label for="csvFile">上传 CSV 订单</label>
+          <input id="csvFile" type="file" accept=".csv">
+          <button id="loadSample" type="button">加载示例数据</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="metrics">
+        <article><span>订单总数</span><strong id="totalOrders">0</strong></article>
+        <article><span>异常订单</span><strong id="abnormalOrders">0</strong></article>
+        <article><span>异常率</span><strong id="abnormalRate">0%</strong></article>
+        <article><span>高优先级问题</span><strong id="urgentIssues">0</strong></article>
+      </section>
+
+      <section class="workspace">
+        <div class="panel issue-panel">
+          <div class="panel-title">
+            <h2>异常类型分布</h2>
+            <span id="normalCount">正常订单 0 单</span>
+          </div>
+          <div id="issueChart" class="issue-chart"></div>
+        </div>
+
+        <div id="advisor" class="panel advisor-panel">
+          <div class="panel-title">
+            <h2>AI 处理建议</h2>
+            <span id="advisorStatus">选择异常订单查看建议</span>
+          </div>
+          <div id="adviceBox" class="advice-box empty">
+            <p>点击订单表中的“生成建议”，系统会模拟大模型输出异常原因、处理动作和客服话术。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="orders" class="panel table-panel">
+        <div class="panel-title">
+          <h2>异常订单明细</h2>
+          <div class="filters">
+            <button class="filter active" data-filter="all" type="button">全部</button>
+            <button class="filter" data-filter="urgent" type="button">高优先级</button>
+            <button class="filter" data-filter="follow" type="button">待跟进</button>
+            <button class="filter" data-filter="normal" type="button">正常</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>订单号</th>
+                <th>平台</th>
+                <th>国家</th>
+                <th>金额</th>
+                <th>状态</th>
+                <th>异常标签</th>
+                <th>优先级</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="orderRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="process" class="process">
+        <div><span>1</span><strong>订单同步</strong><p>ERP 或平台订单导入 CSV，统一字段结构。</p></div>
+        <div><span>2</span><strong>规则识别</strong><p>按物流、地址、SKU、金额、状态等规则识别异常。</p></div>
+        <div><span>3</span><strong>AI 建议</strong><p>自动生成原因、处理动作和客服沟通话术。</p></div>
+        <div><span>4</span><strong>运营跟进</strong><p>按优先级分派给运营、物流、财务或客服处理。</p></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SAMPLE_DATA = `order_id,platform,country,customer_name,phone,address,sku,quantity,order_amount,declared_amount,currency,logistics_no,order_status,logistics_status,created_at
+CB20260718001,Amazon,US,Alice Brown,+14155552671,"88 King Street, San Francisco, CA 94107",SKU-A100,2,39.98,39.98,USD,LP993842001CN,Shipped,In transit,2026-07-18
+CB20260718002,Shopee,MY,Lim Wei,,"Kuala Lumpur",SKU-B210,1,15.90,15.90,USD,,Paid,Pending,2026-07-18
+CB20260718003,eBay,DE,Jonas Weber,+491701234567,"Berliner Strasse 18, Berlin",SKU-C301,3,88.50,9.99,EUR,DE99881234,Shipped,Delivered,2026-07-17
+CB20260718004,TikTok Shop,US,Emma Stone,abc123,"",SKU-D440,1,23.50,23.50,USD,LP993842004CN,Shipped,Pending,2026-07-17
+CB20260718005,Amazon,GB,Oliver Smith,+447700900123,"221B Baker Street, London",,2,44.00,44.00,GBP,LP993842005CN,Paid,In transit,2026-07-16
+CB20260718006,Lazada,TH,Nok Suthida,+66812345678,"99 Rama Road, Bangkok",SKU-E120,0,18.00,18.00,USD,LP993842006CN,Shipped,In transit,2026-07-16
+CB20260718007,AliExpress,FR,Lucas Martin,+33612345678,"12 Rue Lafayette, Paris",SKU-A100,1,29.99,29.99,EUR,LP993842007CN,Cancelled,In transit,2026-07-15
+CB20260718008,Shopee,SG,Chen Ming,+6581234567,"18 Orchard Road, Singapore",SKU-F900,4,120.00,120.00,USD,SG77881220,Shipped,Delivered,2026-07-15
+CB20260718009,eBay,CA,Sophia Lee,+14165550199,"75 Queen Street, Toronto",SKU-Z404,1,-5.00,5.00,USD,LP993842009CN,Paid,Pending,2026-07-14
+CB20260718010,Amazon,US,Noah Miller,+12125551234,"5th Avenue, New York, NY 10001",SKU-A100,2,39.98,39.98,USD,LP993842010CN,Shipped,Delivered,2026-07-14
+CB20260718011,TikTok Shop,US,Mia Johnson,+13105550111,"Los Angeles",SKU-B210,1,15.90,15.90,USD,,Paid,Pending,2026-07-13
+CB20260718012,Lazada,PH,Juan Dela Cruz,+639171234567,"Makati City, Metro Manila",SKU-P330,6,210.00,20.00,USD,PH5531882,Shipped,In transit,2026-07-13`;
+
+    const state = {
+      data: null,
+      filter: "all"
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const SEVERITY_PRIORITY = {
+      urgent: "高优先级",
+      follow: "待跟进",
+      normal: "正常"
+    };
+
+    const ACTION_MAP = {
+      missing_logistics: "通知仓储或物流接口负责人补传物流单号，并在 ERP 中重新同步履约状态。",
+      address_incomplete: "联系客户补全详细街道、城市、邮编等字段，确认后重新生成面单。",
+      phone_invalid: "联系客户确认可用手机号，避免物流商拒收或派送失败。",
+      missing_sku: "回查平台订单明细和商品映射表，补全 SKU 后再进入拣货流程。",
+      quantity_invalid: "暂停履约，核对平台订单数量和支付记录，确认后修正订单数据。",
+      amount_invalid: "提交财务复核订单金额，确认是否为平台退款、优惠或同步异常。",
+      declaration_low: "交由报关/财务复核申报金额，避免低申报导致清关风险。",
+      status_conflict: "优先核查订单取消时间和物流揽收时间，必要时拦截包裹或通知客服安抚客户。",
+      tracking_delay: "查询物流商接口或人工刷新轨迹，超过 SLA 后升级给物流负责人。"
+    };
+
+    function splitCsvLine(line) {
+      const cells = [];
+      let current = "";
+      let quoted = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"' && line[i - 1] !== "\\") {
+          quoted = !quoted;
+          continue;
+        }
+        if (ch === "," && !quoted) {
+          cells.push(current);
+          current = "";
+        } else {
+          current += ch;
+        }
+      }
+      cells.push(current);
+      return cells.map((value) => value.trim());
+    }
+
+    function parseCsv(text) {
+      const lines = text.trim().split(/\r?\n/);
+      const headers = splitCsvLine(lines[0]);
+      return lines.slice(1).filter(Boolean).map((line) => {
+        const values = splitCsvLine(line);
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = (values[index] || "").replace(/^"|"$/g, "");
+        });
+        return row;
+      });
+    }
+
+    function toFloat(value) {
+      const n = Number.parseFloat(value);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function toInt(value) {
+      const n = Number.parseInt(value, 10);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function detectIssues(order) {
+      const issues = [];
+      const phone = order.phone || "";
+      const address = order.address || "";
+      const sku = order.sku || "";
+      const logisticsNo = order.logistics_no || "";
+      const orderStatus = order.order_status || "";
+      const logisticsStatus = order.logistics_status || "";
+      const quantity = toInt(order.quantity);
+      const orderAmount = toFloat(order.order_amount);
+      const declaredAmount = toFloat(order.declared_amount);
+
+      if (!logisticsNo) {
+        issues.push({ code: "missing_logistics", label: "物流单号缺失", severity: "urgent" });
+      }
+      if (!address || address.length < 12) {
+        issues.push({ code: "address_incomplete", label: "收件地址不完整", severity: "urgent" });
+      }
+      if (!phone || !/^\+?\d{7,15}$/.test(phone)) {
+        issues.push({ code: "phone_invalid", label: "电话格式异常", severity: "follow" });
+      }
+      if (!sku) {
+        issues.push({ code: "missing_sku", label: "SKU 缺失", severity: "urgent" });
+      }
+      if (quantity <= 0) {
+        issues.push({ code: "quantity_invalid", label: "数量异常", severity: "urgent" });
+      }
+      if (orderAmount <= 0) {
+        issues.push({ code: "amount_invalid", label: "订单金额异常", severity: "urgent" });
+      }
+      if (orderAmount > 0 && declaredAmount > 0 && declaredAmount / orderAmount < 0.35) {
+        issues.push({ code: "declaration_low", label: "报关金额偏低", severity: "follow" });
+      }
+      if (orderStatus === "Cancelled" && ["In transit", "Delivered"].includes(logisticsStatus)) {
+        issues.push({ code: "status_conflict", label: "订单物流状态不一致", severity: "urgent" });
+      }
+      if (orderStatus === "Shipped" && logisticsStatus === "Pending") {
+        issues.push({ code: "tracking_delay", label: "物流轨迹未更新", severity: "follow" });
+      }
+      return issues;
+    }
+
+    function analyzeOrders(orders) {
+      const issueCounter = new Map();
+      const analyzed = orders.map((order) => {
+        const issues = detectIssues(order);
+        issues.forEach((issue) => {
+          issueCounter.set(issue.label, (issueCounter.get(issue.label) || 0) + 1);
+        });
+        let priority = "normal";
+        if (issues.some((item) => item.severity === "urgent")) {
+          priority = "urgent";
+        } else if (issues.length) {
+          priority = "follow";
+        }
+        return { ...order, issues, issue_count: issues.length, priority };
+      });
+
+      const total = analyzed.length;
+      const abnormal = analyzed.filter((order) => order.issue_count).length;
+      const summary = {
+        total,
+        normal: total - abnormal,
+        abnormal,
+        abnormal_rate: total ? +(abnormal / total * 100).toFixed(1) : 0,
+        urgent: analyzed.reduce((sum, order) => sum + order.issues.filter((issue) => issue.severity === "urgent").length, 0),
+        follow: analyzed.reduce((sum, order) => sum + order.issues.filter((issue) => issue.severity === "follow").length, 0)
+      };
+
+      return {
+        summary,
+        issue_distribution: [...issueCounter.entries()]
+          .map(([label, count]) => ({ label, count }))
+          .sort((a, b) => b.count - a.count),
+        orders: analyzed
+      };
+    }
+
+    function priorityText(priority) {
+      return SEVERITY_PRIORITY[priority] || "正常";
+    }
+
+    function updateMetrics(summary) {
+      $("#totalOrders").textContent = summary.total;
+      $("#abnormalOrders").textContent = summary.abnormal;
+      $("#abnormalRate").textContent = `${summary.abnormal_rate}%`;
+      $("#urgentIssues").textContent = summary.urgent;
+      $("#normalCount").textContent = `正常订单 ${summary.normal} 单`;
+    }
+
+    function renderChart(distribution) {
+      const chart = $("#issueChart");
+      if (!distribution.length) {
+        chart.innerHTML = "<p>暂无异常类型。</p>";
+        return;
+      }
+      const max = Math.max(...distribution.map((item) => item.count));
+      chart.innerHTML = distribution.map((item) => {
+        const width = Math.max(8, Math.round(item.count / max * 100));
+        return `
+          <div class="bar-row">
+            <span>${item.label}</span>
+            <div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div>
+            <strong>${item.count}</strong>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function filteredOrders() {
+      if (!state.data) return [];
+      if (state.filter === "all") return state.data.orders;
+      return state.data.orders.filter((order) => order.priority === state.filter);
+    }
+
+    function renderRows() {
+      const rows = filteredOrders();
+      $("#orderRows").innerHTML = rows.map((order) => {
+        const tags = order.issues.length
+          ? order.issues.map((issue) => `<span class="tag">${issue.label}</span>`).join("")
+          : `<span class="tag">无异常</span>`;
+        const amount = `${order.order_amount} ${order.currency}`;
+        return `
+          <tr>
+            <td>${order.order_id}</td>
+            <td>${order.platform}</td>
+            <td>${order.country}</td>
+            <td>${amount}</td>
+            <td>${order.order_status} / ${order.logistics_status}</td>
+            <td><div class="tag-list">${tags}</div></td>
+            <td class="priority ${order.priority}">${priorityText(order.priority)}</td>
+            <td><button type="button" data-order="${order.order_id}">生成建议</button></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderAll(data) {
+      state.data = data;
+      updateMetrics(data.summary);
+      renderChart(data.issue_distribution);
+      renderRows();
+      $("#advisorStatus").textContent = "选择异常订单查看建议";
+      $("#adviceBox").classList.add("empty");
+      $("#adviceBox").innerHTML = "<p>点击订单表中的“生成建议”，系统会模拟大模型输出异常原因、处理动作和客服话术。</p>";
+    }
+
+    function buildAdvice(order) {
+      const issues = order.issues || [];
+      if (!issues.length) {
+        return {
+          priority: "normal",
+          owner: "订单专员",
+          cause: "当前订单关键字段完整，物流与订单状态未发现明显冲突。",
+          actions: ["继续按正常履约流程处理。"],
+          message: "该订单目前未发现异常，可继续正常发货与跟踪。"
+        };
+      }
+      const labels = issues.map((issue) => issue.label).join("、");
+      const priority = issues.some((issue) => issue.severity === "urgent") ? "urgent" : "follow";
+      return {
+        priority,
+        owner: priority === "urgent" ? "运营负责人" : "订单专员",
+        cause: `系统识别到该订单存在 ${labels}，可能影响发货、物流跟踪或报关核算。`,
+        actions: issues.map((issue) => ACTION_MAP[issue.code] || "安排运营人工复核该异常。"),
+        message: `您好，订单 ${order.order_id} 当前存在${labels}问题。我们正在核对订单信息并尽快处理，处理完成后会同步最新进度。`
+      };
+    }
+
+    function showAdvice(orderId) {
+      $("#advisorStatus").textContent = `订单 ${orderId}`;
+      const order = state.data.orders.find((item) => item.order_id === orderId);
+      const advice = buildAdvice(order);
+      $("#adviceBox").classList.remove("empty");
+      $("#adviceBox").innerHTML = `
+        <div class="advice-section">
+          <strong>异常原因</strong>
+          <p>${advice.cause}</p>
+        </div>
+        <div class="advice-section">
+          <strong>建议动作</strong>
+          <ul>${advice.actions.map((action) => `<li>${action}</li>`).join("")}</ul>
+        </div>
+        <div class="advice-section">
+          <strong>处理优先级</strong>
+          <p>${priorityText(advice.priority)}，建议责任人：${advice.owner}</p>
+        </div>
+        <div class="advice-section">
+          <strong>客服/运营话术</strong>
+          <p>${advice.message}</p>
+        </div>
+      `;
+    }
+
+    function loadSample() {
+      renderAll(analyzeOrders(parseCsv(SAMPLE_DATA)));
+    }
+
+    $("#loadSample").addEventListener("click", loadSample);
+    $("#csvFile").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      file.text().then((text) => {
+        renderAll(analyzeOrders(parseCsv(text)));
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      const orderId = event.target.dataset?.order;
+      if (orderId) {
+        showAdvice(orderId);
+      }
+
+      if (event.target.classList.contains("filter")) {
+        document.querySelectorAll(".filter").forEach((button) => button.classList.remove("active"));
+        event.target.classList.add("active");
+        state.filter = event.target.dataset.filter;
+        renderRows();
+      }
+    });
+
+    loadSample();
+  </script>
+</body>
+</html>
